@@ -5,33 +5,43 @@ root = tree.getroot()
 
 Termine = root[1]
 
-Beispieldatum = root[1][0][11].text
-print "Beispieldatum:", Beispieldatum
+Laufzeit = True
 
-Suchtitel = raw_input("Suchtitel   : ")
-Start_NEU = raw_input("Start - NEU : ")
-Ende_NEU = raw_input("Ende - NEU  : ")
+while Laufzeit:
+    Beispieldatum = root[1][0][11].text
+    print ""
+    print "Beispieldatum:", Beispieldatum
 
-Fehler = 0
+    Suchtitel = raw_input("Suchtitel   : ")
+    Start_NEU = raw_input("Start - NEU : ")
+    Ende_NEU = raw_input("Ende - NEU  : ")
+    
+    Fehler = 0
+    
+    i = 0
+    for Termin in Termine:
+        Titel = Termin.find('titel').text
+        if len(Start_NEU) != len (Termin.find('terminvon').text):
+            print "Neuer Text mit falscher Laenge"
+            Fehler = 1
+            break
+        if len(Ende_NEU) != len (Termin.find('terminbis').text):
+            print "Neuer Text mit falscher Laenge"
+            Fehler = 1
+            break
+        if Titel == Suchtitel:
+            i = i + 1
+            Termin.find('terminvon').text = Start_NEU
+            Termin.find('terminbis').text = Ende_NEU
 
-i = 0
-for Termin in Termine:
-    Titel = Termin.find('titel').text
-    if len(Start_NEU) != len (Termin.find('terminvon').text):
-        print "Neuer Text mit falscher Laenge"
-        Fehler = 1
-        break
-    if len(Ende_NEU) != len (Termin.find('terminbis').text):
-        print "Neuer Text mit falscher Laenge"
-        Fehler = 1
-        break
-    if Titel == Suchtitel:
-        i = i + 1
-        Termin.find('terminvon').text = Start_NEU
-        Termin.find('terminbis').text = Ende_NEU
+    if Fehler == 0:
+        print i, "Aenderungen vorgenommen"
 
-if Fehler == 0:
-    print i, "Aenderungen vorgenommen"
-    tree.write(open('Versandliste2.xml', 'w'))
+    Suchtitel = raw_input("Noch ein Titel? (J/N): ")
+    if Suchtitel != 'J':
+        Laufzeit = False
 
-time.sleep(3)
+
+tree.write(open('Versandliste2.xml', 'w'))
+
+# time.sleep(3)
